@@ -1,4 +1,5 @@
 package dev.sudoloser.streakify
+
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
@@ -66,8 +67,6 @@ class MainActivity : ComponentActivity() {
                 }
 
                 NavHost(navController = navController, startDestination = "dashboard") {
-...
-
                     composable("dashboard") {
                         DashboardScreen(
                             onSettingsClick = { navController.navigate("settings") },
@@ -95,4 +94,3 @@ class MainActivity : ComponentActivity() {
         return mode == AppOpsManager.MODE_ALLOWED
     }
 }
-
