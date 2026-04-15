@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -16,7 +17,9 @@ enum class FilteringMode {
 }
 
 @Singleton
-class PreferenceManager @Inject constructor(private val context: Context) {
+class PreferenceManager @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     private object Keys {
         val FILTERING_MODE = stringPreferencesKey("filtering_mode")

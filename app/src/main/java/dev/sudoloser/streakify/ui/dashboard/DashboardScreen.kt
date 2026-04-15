@@ -30,7 +30,7 @@ import dev.sudoloser.streakify.ui.theme.Sage
 import dev.sudoloser.streakify.ui.theme.StreakifyTheme
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Settings
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +59,7 @@ fun DashboardScreen(
                     containerColor = Mint,
                     modifier = Modifier.padding(bottom = 8.dp)
                 ) {
-                    Icon(Icons.Default.List, contentDescription = "App List")
+                    Icon(Icons.AutoMirrored.Filled.List, contentDescription = "App List")
                 }
                 FloatingActionButton(
                     onClick = onSettingsClick,
