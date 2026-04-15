@@ -14,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import dev.sudoloser.streakify.data.prefs.FilteringMode
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +58,15 @@ fun AppListScreen(
                 ListItem(
                     headlineContent = { Text(app.appName) },
                     supportingContent = { Text(app.packageName) },
+                    leadingContent = {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(app.packageName)
+                                .build(),
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    },
                     trailingContent = {
                         Checkbox(
                             checked = app.isSelected,

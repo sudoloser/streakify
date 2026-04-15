@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,12 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text("Notification Threshold: ${state.reminderThreshold} days", style = MaterialTheme.typography.titleMedium)
+            Text("Notification Threshold", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "Remind me if I haven't used an app with a ${state.reminderThreshold} day streak.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             Slider(
                 value = state.reminderThreshold.toFloat(),
                 onValueChange = { viewModel.setReminderThreshold(it.toInt()) },
@@ -60,7 +66,11 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text("Material You", style = MaterialTheme.typography.titleMedium)
                 Switch(
                     checked = state.materialYou,

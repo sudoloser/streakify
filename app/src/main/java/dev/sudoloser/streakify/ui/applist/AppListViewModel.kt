@@ -1,6 +1,7 @@
 package dev.sudoloser.streakify.ui.applist
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.sudoloser.streakify.data.prefs.FilteringMode
 import dev.sudoloser.streakify.data.prefs.PreferenceManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,7 +44,11 @@ class AppListViewModel @Inject constructor(
         _searchQuery
     ) { mode, blacklisted, whitelisted, query ->
         val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
-            .filter { it.packageName != context.packageName }
+            .filter { info ->
+                val isSystemApp = (info.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                val isUserApp = !isSystemApp || (info.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+                isUserApp && info.packageName != context.packageName
+            }
             .map { info ->
                 val isSelected = when (mode) {
                     FilteringMode.BLACKLIST -> info.packageName in blacklisted
@@ -51,7 +57,7 @@ class AppListViewModel @Inject constructor(
                 AppInfo(
                     packageName = info.packageName,
                     appName = pm.getApplicationLabel(info).toString(),
-                    icon = pm.getApplicationIcon(info),
+                    icon = null, // Defer icon loading for performance
                     isSelected = isSelected
                 )
             }
@@ -59,7 +65,9 @@ class AppListViewModel @Inject constructor(
             .sortedBy { it.appName }
 
         AppListState(installedApps, mode, query)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppListState())
+    }
+    .flowOn(Dispatchers.Default)
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppListState())
 
     fun setSearchQuery(query: String) {
         _searchQuery.value = query
